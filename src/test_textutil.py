@@ -2,7 +2,7 @@ import unittest
 
 from textnode import *
 from htmlnode import *
-from util import *
+from textutil import *
 
 class TestUtil(unittest.TestCase):
     def test_eq_1(self):
