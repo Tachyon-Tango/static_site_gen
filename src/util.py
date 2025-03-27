@@ -29,4 +29,52 @@ def extract_markdown_links(text):
     matches = re.findall(filter_param, text)
     return matches
 
+def split_nodes_image(old_nodes):
+    new_nodes = []
+    for node in old_nodes:
+        if node.text_type == TextType.TEXT:
+            extracted_tuples = extract_markdown_images(node.text)
             
+            if len(extracted_tuples) > 0: # Split occurrs
+                current_node = node
+                for curr_tuple in extracted_tuples:
+                    delimiter = f"![{curr_tuple[0]}]({curr_tuple[1]})"
+                    node_split_texts = current_node.text.split(delimiter, maxsplit=1)
+
+                    new_nodes.append(TextNode(node_split_texts[0], TextType.TEXT))
+                    new_nodes.append(TextNode(curr_tuple[0], TextType.IMAGE, curr_tuple[1]))
+                    current_node = TextNode(node_split_texts[1], TextType.TEXT)
+                
+                if len(current_node.text) > 0:
+                    new_nodes.append(current_node)
+
+            else: # No Split Needed
+                new_nodes.append(node)
+        else:
+            new_nodes.append(node)
+    return new_nodes
+
+def split_nodes_link(old_nodes):
+    new_nodes = []
+    for node in old_nodes:
+        if node.text_type == TextType.TEXT:
+            extracted_tuples = extract_markdown_links(node.text)
+            
+            if len(extracted_tuples) > 0: # Split occurrs
+                current_node = node
+                for curr_tuple in extracted_tuples:
+                    delimiter = f"[{curr_tuple[0]}]({curr_tuple[1]})"
+                    node_split_texts = current_node.text.split(delimiter, maxsplit=1)
+
+                    new_nodes.append(TextNode(node_split_texts[0], TextType.TEXT))
+                    new_nodes.append(TextNode(curr_tuple[0], TextType.LINK, curr_tuple[1]))
+                    current_node = TextNode(node_split_texts[1], TextType.TEXT)
+                
+                if len(current_node.text) > 0:
+                    new_nodes.append(current_node)
+                    
+            else: # No Split Needed
+                new_nodes.append(node)
+        else:
+            new_nodes.append(node)
+    return new_nodes
