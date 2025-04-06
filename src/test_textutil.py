@@ -4,7 +4,7 @@ from textnode import *
 from htmlnode import *
 from textutil import *
 
-class TestUtil(unittest.TestCase):
+class TestTextUtil(unittest.TestCase):
     def test_eq_1(self):
         node_array_test = [TextNode("This is a `code` block.", TextType.TEXT)]
         node_array_expected = [TextNode("This is a ", TextType.TEXT), TextNode("code", TextType.CODE), TextNode(" block.", TextType.TEXT)]
